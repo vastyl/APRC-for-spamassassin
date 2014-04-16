@@ -5,7 +5,7 @@
 ### Script to detect phishing for spamassassin                          
 ### Phishing url addresses from web phishtank.com                       
 ###                                                                     
-### Copyright (C) 2013-2014 Petr Havlicek (ph@petrh.cz)
+### Copyright (C) 2014 Stanislav Vaštyl (stanislav@vastyl.cz)
 ###
 ### This program is free software: you can redistribute it and/or modify
 ### it under the terms of the GNU General Public License as published by
