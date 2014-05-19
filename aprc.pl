@@ -75,9 +75,8 @@ foreach my $item (@result){
         $item =~ s/\#/\\#/g;
         $item =~ s/\@/\\@/g;
         ### file dump
-        print $OUT "uri PHISHTANK".$sum." \t /".$item."/ \n";
-        print $OUT "score PHISHTANK".$sum." \t 12.0 \n \n";
-
+        print $OUT "uri PHISHTANK".$sum." \t/".$item."/is\n";
+        print $OUT "score PHISHTANK".$sum." \t12.0\n\n";
 } 
 close $OUT;
 print "Script successful";
