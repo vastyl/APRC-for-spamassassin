@@ -61,6 +61,7 @@ while (my $row = $csv->getline($csvfile)) {
     }
 }
 close $csvfile;
+unlink "online-valid.csv";
 print "Parse and push is correctly \n"; 
 
 ### escape chars for spamassassin
