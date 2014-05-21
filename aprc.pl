@@ -38,7 +38,7 @@ if ( is_success($status) ){
     print "File downloaded correctly\n";
 } else {
     print "Error downloading file: $status\n";
-    exit 0;
+    exit 10;
 }
 
 my $csv = Text::CSV->new();
@@ -59,7 +59,7 @@ while (my $row = $csv->getline($csvfile)) {
     } else {
         my $err = $csv->error_input;
         print "Failed to parse line: $err";
-        exit 0;
+        exit 20;
     }
 }
 close $csvfile;
