@@ -26,15 +26,19 @@ use warnings;
 use Text::CSV;
 use LWP::Simple;
 use Data::Dumper;
+use File::Copy;
+
+my $apikey = $ARGV[0] || "";
+my $targetfile = $ARGV[1];
 
 ### url + activation key for phishtank (Without this key, you will be limited to a few downloads per day.)
-my $status = getstore("http://data.phishtank.com/data/xxxxxxxxx/online-valid.csv", "online-valid.csv");
+my $status = getstore("http://data.phishtank.com/data/$apikey/online-valid.csv", "online-valid.csv");
 
 if ( is_success($status) ){
-	print "File downloaded correctly\n";
-	} else {
-	print "Error downloading file: $status\n";
-	exit 0;
+    print "File downloaded correctly\n";
+} else {
+    print "Error downloading file: $status\n";
+    exit 10;
 }
 
 my $csv = Text::CSV->new();
@@ -43,23 +47,24 @@ open (my $csvfile, "<", "online-valid.csv") or die $!;
 ### parse csv + push array @result
 my @result=();
 while (my $row = $csv->getline($csvfile)) {
-	if ($row) {
-		my @columns = @$row;
-		if ($columns[1] ne "url"){
-#    		my $first = substr($columns[1],0,7);
-#    		if ($first eq "http://" ){
-#    			my $url = substr($columns[1],7); #7 http://
-    			push(@result,$columns[1]);
-#    			} 
-		}  	
+    if ($row) {
+        my @columns = @$row;
+        if ($columns[1] ne "url"){
+#           my $first = substr($columns[1],0,7);
+#           if ($first eq "http://" ){
+#               my $url = substr($columns[1],7); #7 http://
+                push(@result,$columns[1]);
+#           } 
+        }   
     } else {
-    my $err = $csv->error_input;
-    print "Failed to parse line: $err";
-    exit 0;
+        my $err = $csv->error_input;
+        print "Failed to parse line: $err";
+        exit 20;
     }
 }
 close $csvfile;
-print "Parse and push is correctly \n";	
+unlink "online-valid.csv";
+print "Parse and push is correctly \n"; 
 
 ### escape chars for spamassassin
 ### uri LOCAL_URI_EXAMPLE   /www\.example\.com\/
@@ -68,23 +73,21 @@ my $sum = 0;
 open my $OUT, ">output.out" or die $!;
 print $OUT "###\n### Create file: " .gmtime()."\n### \n\n";
 foreach my $item (@result){
-	$sum = $sum + 1;
-        my $last = substr($item, -1);
-        if ($last eq "/"){
-                $item = substr($item, 0, -1);
-        }
+    $sum = $sum + 1;
+    my $last = substr($item, -1);
+    if ($last eq "/"){
+            $item = substr($item, 0, -1);
+    }
 
-        my $backslash = "\\/";
-        $item =~ s/\./\\./g;
-        $item =~ s/\//$backslash/g;
-        $item =~ s/\#/\\#/g;
-        $item =~ s/\@/\\@/g;
-        ### file dump
-        print $OUT "uri PHISHTANK_".$sum." \t/".$item."/is\n";
-        print $OUT "score PHISHTANK_".$sum." \t 12.0 \n \n";
-
-        print $OUT "uri PHISHTANK_".$sum."_1 \t/".$item."\\//is\n";
-        print $OUT "score PHISHTANK_".$sum."_1 \t 12.0 \n \n";
-
+    $item = quotemeta($item);
+    ### file dump
+    print $OUT "uri PHISHTANK_".$sum." \t/".$item."/i\n";
+    print $OUT "score PHISHTANK_".$sum." \t 6.0 \n \n";
+}
 close $OUT;
-print "Script successful";
+
+if (defined($targetfile)) {
+    move("output.out", $targetfile) or die "move output.out -> $targetfile failed";
+}
+
+print "Script successful\n";
