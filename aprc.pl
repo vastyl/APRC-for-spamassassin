@@ -85,6 +85,6 @@ foreach my $item (@result){
 
     print $OUT "uri PHISHTANK_".$sum."_1 \t/".$item."\\//is\n";
     print $OUT "score PHISHTANK_".$sum."_1 \t 12.0 \n \n";
-
+}
 close $OUT;
 print "Script successful";
