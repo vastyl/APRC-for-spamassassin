@@ -26,8 +26,10 @@ use warnings;
 use Text::CSV;
 use LWP::Simple;
 use Data::Dumper;
+use File::Copy;
 
 my $apikey = $ARGV[0] || "";
+my $targetfile = $ARGV[1];
 
 ### url + activation key for phishtank (Without this key, you will be limited to a few downloads per day.)
 my $status = getstore("http://data.phishtank.com/data/$apikey/online-valid.csv", "online-valid.csv");
@@ -90,4 +92,9 @@ foreach my $item (@result){
     print $OUT "score PHISHTANK_".$sum."_1 \t 12.0 \n \n";
 }
 close $OUT;
+
+if (defined($targetfile)) {
+    move("output.out", $targetfile) or die "move output.out -> $targetfile failed";
+}
+
 print "Script successful";
