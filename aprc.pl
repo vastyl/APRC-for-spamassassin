@@ -69,14 +69,22 @@ open my $OUT, ">output.out" or die $!;
 print $OUT "###\n### Create file: " .gmtime()."\n### \n\n";
 foreach my $item (@result){
 	$sum = $sum + 1;
-	my $backslash = "\\/";
-	$item =~ s/\./\\./g;
-	$item =~ s/\//$backslash/g;
+        my $last = substr($item, -1);
+        if ($last eq "/"){
+                $item = substr($item, 0, -1);
+        }
+
+        my $backslash = "\\/";
+        $item =~ s/\./\\./g;
+        $item =~ s/\//$backslash/g;
         $item =~ s/\#/\\#/g;
         $item =~ s/\@/\\@/g;
         ### file dump
-        print $OUT "uri PHISHTANK".$sum." \t/".$item."/is\n";
-        print $OUT "score PHISHTANK".$sum." \t12.0\n\n";
-} 
+        print $OUT "uri PHISHTANK_".$sum." \t/".$item."/is\n";
+        print $OUT "score PHISHTANK_".$sum." \t 12.0 \n \n";
+
+        print $OUT "uri PHISHTANK_".$sum."_1 \t/".$item."\\//is\n";
+        print $OUT "score PHISHTANK_".$sum."_1 \t 12.0 \n \n";
+
 close $OUT;
 print "Script successful";
