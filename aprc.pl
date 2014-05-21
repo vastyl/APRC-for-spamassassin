@@ -94,4 +94,4 @@ if (defined($targetfile)) {
     move("output.out", $targetfile) or die "move output.out -> $targetfile failed";
 }
 
-print "Script successful";
+print "Script successful\n";
