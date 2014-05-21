@@ -27,8 +27,10 @@ use Text::CSV;
 use LWP::Simple;
 use Data::Dumper;
 
+my $apikey = $ARGV[0] || "";
+
 ### url + activation key for phishtank (Without this key, you will be limited to a few downloads per day.)
-my $status = getstore("http://data.phishtank.com/data/xxxxxxxxx/online-valid.csv", "online-valid.csv");
+my $status = getstore("http://data.phishtank.com/data/$apikey/online-valid.csv", "online-valid.csv");
 
 if ( is_success($status) ){
     print "File downloaded correctly\n";
