@@ -79,11 +79,7 @@ foreach my $item (@result){
             $item = substr($item, 0, -1);
     }
 
-    my $backslash = "\\/";
-    $item =~ s/\./\\./g;
-    $item =~ s/\//$backslash/g;
-    $item =~ s/\#/\\#/g;
-    $item =~ s/\@/\\@/g;
+    $item = quotemeta($item);
     ### file dump
     print $OUT "uri PHISHTANK_".$sum." \t/".$item."/i\n";
     print $OUT "score PHISHTANK_".$sum." \t 6.0 \n \n";
